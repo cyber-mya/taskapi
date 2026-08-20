@@ -1,0 +1,19 @@
+[Unit]
+Description=Task API Gunicorn Service
+After=network.target
+
+[Service]
+Type=simple
+User=mya
+Group=mya
+
+WorkingDirectory=/home/mya/taskapi
+Environment="PATH=/home/mya/taskapi/venv/bin"
+
+ExecStart=/home/mya/taskapi/venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 app:app
+
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

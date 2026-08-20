@@ -1,0 +1,7 @@
+venv/
+__pycache__/
+*.pyc
+awscliv2.zip
+aws/
+get-docker.sh
+requiremets.txt
