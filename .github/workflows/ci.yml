@@ -26,3 +26,14 @@ jobs:
       - name: Run tests
         run: |
           python -m pytest test_app.py -v
+
+      - name: Build Docker image
+        run: |
+          docker build -t taskapi:ci .
+
+      - name: Smoke test the container
+        run: |
+          docker run -d -p 8000:8000 --name taskapi-ci taskapi:ci
+          sleep 3
+          curl -f http://localhost:8000/health
+          docker stop taskapi-ci
