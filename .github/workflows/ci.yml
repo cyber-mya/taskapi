@@ -37,3 +37,14 @@ jobs:
           sleep 3
           curl -f http://localhost:8000/health
           docker stop taskapi-ci
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Push image to Docker Hub
+        run: |
+          docker tag taskapi:ci ${{ secrets.DOCKERHUB_USERNAME }}/taskapi:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/taskapi:latest
