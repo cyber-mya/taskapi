@@ -48,3 +48,15 @@ jobs:
         run: |
           docker tag taskapi:ci ${{ secrets.DOCKERHUB_USERNAME }}/taskapi:latest
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/taskapi:latest
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/taskapi:latest
+            docker stop taskapi || true
+            docker rm taskapi || true
+            docker run -d -p 8000:8000 --name taskapi --restart unless-stopped ${{ secrets.DOCKERHUB_USERNAME }}/taskapi:latest
